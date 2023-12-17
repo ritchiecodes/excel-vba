@@ -1,4 +1,4 @@
-Private Sub Worksheet_Change(ByVal Target As Range)
+Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean)
     Dim cell As Range
     Dim rng As Range
     Dim ws As Worksheet
@@ -7,23 +7,23 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     Set ws = ActiveSheet ' You can change this to a specific sheet if needed
     Set rng = ws.UsedRange ' Change this to your specific range
 
-    ' Check if the changed cells are within the monitored range
+    ' Check if the double-clicked cell is within the monitored range
     If Not Intersect(Target, rng) Is Nothing Then
+        ' Cancel the default double-click behavior (moving to the next cell)
+        Cancel = True
+
         ' Disable events to prevent infinite loop
         Application.EnableEvents = False
 
-        ' Loop through each changed cell
-        For Each cell In Target
-            ' Check if the cell is not empty
-            If cell.Value <> "" Then
-                ' Convert text to uppercase
-                cell.Value = UCase(cell.Value)
+        ' Check if the cell is not empty
+        If Target.Value <> "" Then
+            ' Convert text to uppercase
+            Target.Value = UCase(Target.Value)
 
-                ' Set font and font size
-                cell.Font.Name = "Arial" ' Change to your desired font
-                cell.Font.Size = 12 ' Change to your desired font size
-            End If
-        Next cell
+            ' Set font and font size
+            Target.Font.Name = "Arial" ' Change to your desired font
+            Target.Font.Size = 12 ' Change to your desired font size
+        End If
 
         ' Enable events back
         Application.EnableEvents = True
